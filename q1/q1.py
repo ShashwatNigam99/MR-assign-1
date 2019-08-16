@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 
 
 points = load_velodyne_points('lidar-points.bin')
-print(points)
 
 K = np.array([[7.215377e+02, 0.000000e+00, 6.095593e+02], [0.000000e+00, 7.215377e+02, 1.728540e+02], [0.000000e+00, 0.000000e+00, 1.000000e+00]])
 T = np.array([[0, 0, 1, 0.27], [-1, 0, 0, 0.06], [0, -1, 0, -0.08], [0, 0, 0, 1]])
@@ -27,8 +26,6 @@ for i in range(len(new_points)):
 
 to_plot = []
 depth = []
-
-# print(max(points[:, 0]))
 
 i = 0
 for i in range(len(new_points)):

@@ -113,7 +113,7 @@ for i in range(total):
 img = mpimg.imread('image.png')
 plt.imshow(img)
 
-plt.scatter(x = new_points[:, 0], y = new_points[:, 1], c='r', s=5)
+plt.scatter(x = new_points[:, 0], y = new_points[:, 1], c='r', s=10)
 plt.show()
 # get_R_matrix(H_matrix, K)
 # print(H_matrix)

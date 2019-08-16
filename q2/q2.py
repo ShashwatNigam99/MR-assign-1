@@ -2,14 +2,7 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt 
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import numpy as np
-  
-# # Read Images 
-# img = mpimg.imread('image.png') 
-  
-# # Output Images 
-# plt.imshow(img) 
-# plt.show()
- 
+
 
 def correspondences3D2D():
 	points = []
@@ -78,14 +71,14 @@ img = mpimg.imread('image.png')
   
 # Output Images 
 plt.imshow(img) 
-plt.scatter(x=x, y=y, c='r', s=15)
+plt.scatter(x=x, y=y, c='b', s=30, zorder = 2)
 
 points = [[0,1], [0,2], [1,4], [2,4], [3,7], [6,7], [5,6], [3,5], [2,3], [4,5], [0,7], [1,6]]
 
 for p in points:
 	i = p[0]
 	j = p[1]
-	plt.plot([x[i], x[j]],[y[i], y[j]], c='g', linewidth=2)
+	plt.plot([x[i], x[j]],[y[i], y[j]], c='r', linewidth=4, zorder = 1)
 
 plt.show()
 # temp = np.matmul(P_mat, np.array([1.38, 0, 4.1, 1]))
