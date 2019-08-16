@@ -52,7 +52,7 @@ def get_H_matrix(M_matrix):
 	H_matrix.append(P_vec[6:9])
 	return np.array(H_matrix)
 
-def get_R_matrix(H_matrix, K):
+def get_R_T_matrix(H_matrix, K):
 	K_inv = np.linalg.inv(K)	
 	
 	R = np.matmul(K_inv, H_matrix)
@@ -61,35 +61,22 @@ def get_R_matrix(H_matrix, K):
 	R_temp = np.ones((3,3))
 	R_temp[:, 0] = R[:, 0]
 	R_temp[:, 1] = R[:, 1]
+
+	T = R[:, 2]/np.linalg.norm(R[:, 0])
+
 	R_temp[:, 2] = np.cross(R[:, 0], R[:, 1])
-	
-	# print(np.dot(R_temp[:, 1], R_temp[:, 2]))
+
 	u, s, vh = np.linalg.svd(R_temp, full_matrices=False)
-	# s_temp = np.zeros((3,3))
 
-	# s_temp[0][0] = s[0]
-	# s_temp[1][1] = s[1]
-	# s_temp[2][2] = s[2]
+	determinant = np.linalg.det(np.matmul(u, vh.transpose()))
 
-	# vh = vh.transpose()
-	# print(R_temp)
-	# print(np.matmul(u, np.matmul(s_temp, vh.transpose())))
-
-	determinant = np.linalg.det(np.matmul(u, vh))
-
-	# print(determinant)
-	# print(s)
-	# print(s)
 	s = np.zeros((3,3))
 	s[0][0] = 1
 	s[1][1] = 1
 	s[2][2] = determinant
 	R = np.matmul(u, np.matmul(s, vh))
 	
-	print(np.cross(R[:, 0], R[:, 1]))
-	# print(H_matrix)
-	# print(np.matmul(K, R))
-	# print(np.matmul(u, s, vh))
+	return R, T
 
 K = np.array([[406.952636, 0.000000, 366.184147], [0.000000, 405.671292, 244.705127], [0.000000, 0.000000, 1.000000]])
 
@@ -103,6 +90,18 @@ world_points = np.array(world_points)
 
 M_matrix = calibrateDLT(total, points)
 H_matrix = get_H_matrix(M_matrix)
+R, T = get_R_T_matrix(H_matrix, K)
+
+T = np.array([T])
+P = np.concatenate((R, T.T), axis=1)
+print(P)
+
+# test = np.matmul(K, np.matmul(P, [0.2105, 0, 0, 1])) 
+# print(test/test[2])
+
+# transform = np.matmul(K, P)
+# print(transform)
+# print(H_matrix)
 
 new_points = np.matmul(H_matrix, world_points.T).T
 
@@ -115,7 +114,6 @@ plt.imshow(img)
 
 plt.scatter(x = new_points[:, 0], y = new_points[:, 1], c='r', s=10)
 plt.show()
-# get_R_matrix(H_matrix, K)
 # print(H_matrix)
 
 
