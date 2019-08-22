@@ -83,10 +83,16 @@ K = np.array([[406.952636, 0.000000, 366.184147], [0.000000, 405.671292, 244.705
 total, points = correspondences3D2D()
 
 world_points = []
+world_points_homo = []
 for i in range(total):
 	rec = [points[i]["world"][0], points[i]["world"][1], 1]
 	world_points.append(rec)
 world_points = np.array(world_points)
+
+for i in range(total):
+	rec = [points[i]["world"][0], points[i]["world"][1], 0, 1]
+	world_points_homo.append(rec)
+world_points_homo = np.array(world_points_homo)
 
 M_matrix = calibrateDLT(total, points)
 H_matrix = get_H_matrix(M_matrix)
@@ -94,6 +100,8 @@ R, T = get_R_T_matrix(H_matrix, K)
 
 T = np.array([T])
 P = np.concatenate((R, T.T), axis=1)
+
+K_P = np.matmul(K, P)
 print(P)
 
 # test = np.matmul(K, np.matmul(P, [0.2105, 0, 0, 1])) 
@@ -103,16 +111,22 @@ print(P)
 # print(transform)
 # print(H_matrix)
 
+# print(world_points_homo.shape)
 new_points = np.matmul(H_matrix, world_points.T).T
+plot_points =  np.matmul(K_P, world_points_homo.T).T
+# print(plot_points.shape)
 
 for i in range(total):
 	new_points[i] /= new_points[i][2]
+	plot_points[i] /= plot_points[i][2]
+
 # print(new_points)
 
 img = mpimg.imread('image.png')
 plt.imshow(img)
 
-plt.scatter(x = new_points[:, 0], y = new_points[:, 1], c='r', s=10)
+plt.scatter(x = new_points[:, 0], y = new_points[:, 1], c='r', s=15)
+plt.scatter(x = plot_points[:, 0], y = plot_points[:, 1], c='g', s=15, marker = 'x')
 plt.show()
 # print(H_matrix)
 
